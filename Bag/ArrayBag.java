@@ -1,207 +1,209 @@
-/** A class of bags whose entries are stored in a fixed-size array.
- * @author Sherif Khattab
- *
- */
-
-//The ArrayBag class is a generic class with type parameter T.
 /**
- * @author Sherif Khattab
- *
- * @param <T>
+ * A class of bags whose entries are stored in a fixed-size array.
+ * 
+ * @author Frank M. Carrano
+ * @author Timothy M. Henry
+ * @version 4.0
  */
-public class ArrayBag<T> implements BagInterface<T> {
-	private final T[] bag;//The array reference is immutable. This doesn't prevent changing its entries though.
-	// If we need to make the array resizeable, perhaps we want to remove final from here.
-	private int size;//the number of elements actually stored in the array; This can be less than bag.length.
-	private boolean initialized = false;
+public final class ArrayBag<T> implements BagInterface<T> {
+   private final T[] bag;
+   private int numberOfEntries;
+   private boolean initialized = false;
+   private static final int DEFAULT_CAPACITY = 25;
+   private static final int MAX_CAPACITY = 10000;
 
+   /** Creates an empty bag whose initial capacity is 25. */
+   public ArrayBag() {
+      this(DEFAULT_CAPACITY);
+   } // end default constructor
 
-	/**
-	 * 
-	 */
-	public ArrayBag() {
-		this(DEFAULT_CAPACITY);//Call ArrayBag(int).
-	}
+   /**
+    * Creates an empty bag having a given capacity.
+    * 
+    * @param desiredCapacity The integer capacity desired.
+    */
+   public ArrayBag(int desiredCapacity) {
+      if (desiredCapacity <= MAX_CAPACITY) {
+         // The cast is safe because the new array contains null entries
+         @SuppressWarnings("unchecked")
+         T[] tempBag = (T[]) new Object[desiredCapacity]; // Unchecked cast
+         bag = tempBag;
+         numberOfEntries = 0;
+         initialized = true;
+      } else
+         throw new IllegalStateException("Attempt to create a bag " +
+               "whose capacity exceeds " +
+               "allowed maximum.");
+   } // end constructor
 
-	/** Create an ArrayBag with a maximum capacity of capacity
-	 * @param capacity The maximum number of elements in the ArrayBag
-	 */
-	public ArrayBag(int capacity) {
-		if(capacity > MAX_CAPACITY) {
-			throw new IllegalStateException("An attempt to create a bag with capacity > maximum capacity"
-					+ " was blocked.");
-		} else {
-			//Java doesn't allow the creation of arrays of type parameters. The commented line below is illegal.
-			// array = new T[capacity];
-			@SuppressWarnings("unchecked")
-			T[] temp = (T[]) new Object[capacity];//Object is the upper bound of the type parameter T
-			bag = temp;
-			size = 0;	
-			initialized = true;
-		}
-	}
-	/** Gets the current number of entries in this bag.
-	 * @return The integer number of entries currently in the bag. 
-	 */
+   /**
+    * Adds a new entry to this bag.
+    * 
+    * @param newEntry The object to be added as a new entry.
+    * @return True if the addition is successful, or false if not.
+    */
+   public boolean add(T newEntry) {
+      checkInitialization();
+      boolean result = true;
+      if (isArrayFull()) {
+         result = false;
+      } else { // Assertion: result is true here
+         bag[numberOfEntries] = newEntry;
+         numberOfEntries++;
+      } // end if
 
-	public int getCurrentSize() {
-		return size;
-	}
+      return result;
+   } // end add
 
-	/** Sees whether this bag is empty.
-	 * @return True if the bag is empty, or false if not. 
-	 */
-	public boolean isEmpty() {
-		return size==0;
-	}
+   /**
+    * Retrieves all entries that are in this bag.
+    * 
+    * @return A newly allocated array of all the entries in this bag.
+    */
+   public T[] toArray() {
+      checkInitialization();
 
-	/** Adds a new entry to this bag.
-	 * @param newEntry  The object to be added as a new entry.
-	 * @return True if the addition is successful, or false if not.
-	 */
-	public boolean add(T newEntry) {
-		checkInitialization();
-		boolean result = false;
-		if(size >= bag.length) {
-			result = false;
-		} else {
-			bag[size] = newEntry;
-			size ++;
-			result = true;
-		}
-		return result;
-	}
+      // The cast is safe because the new array contains null entries.
+      @SuppressWarnings("unchecked")
+      T[] result = (T[]) new Object[numberOfEntries]; // Unchecked cast
 
-	/** Removes one unspecified entry from this bag, if possible.
-	 * @return  Either the removed entry, if the removal was successful, or null. 
-	 */
-	public T remove() {
-		checkInitialization();
-		T result = null;
-		result = removeEntry(size - 1);
-		return result;
-	}
+      for (int index = 0; index < numberOfEntries; index++) {
+         result[index] = bag[index];
+      } // end for
 
-	/** Removes one occurrence of a given entry from this bag, if possible.
-	 * @param anEntry  The entry to be removed.
-	 * @return  True if the removal was successful, or false if not.
-	 */
-	public boolean remove(T anEntry) {
-		checkInitialization();
-		boolean result = false;
-		int index = getIndexOf(anEntry);
-		if(index != -1) {
-			result = anEntry.equals(removeEntry(index)); //Better than merely checking removeEntry(index) != null.
-		}
-		return result;
-	}
+      return result;
+      // Note: The body of this method could consist of one return statement,
+      // if you call Arrays.copyOf
+   } // end toArray
 
-	/** Removes all entries from this bag. 
-	 */
-	public void clear() {
-		//The line below is not correct because bag is final.
-		//bag = null;
-		while(!isEmpty()) {
-			remove();
-		}
-	}
+   /**
+    * Sees whether this bag is empty.
+    * 
+    * @return True if this bag is empty, or false if not.
+    */
+   public boolean isEmpty() {
+      return numberOfEntries == 0;
+   } // end isEmpty
 
-	/** Counts the number of times a given entry appears in this bag.
-	 * @param anEntry  The entry to be counted.
-	 * @return The number of times anEntry appears in the bag. 
-	 */
-	public int getFrequencyOf(T anEntry) {
-		checkInitialization();
-		int count = 0;
-		for(T entry : bag) {
-			if(anEntry.equals(entry)) { //This is safer than entry.equals(anEntry) as the bag may contain nulls.
-				count++;				
-			}
-		}
-		return count;
-	}
+   /**
+    * Gets the current number of entries in this bag.
+    * 
+    * @return The integer number of entries currently in this bag.
+    */
+   public int getCurrentSize() {
+      return numberOfEntries;
+   } // end getCurrentSize
 
-	/** Tests whether this bag contains a given entry.
-	 * @param anEntry  The entry to locate.
-	 * @return  True if the bag contains anEntry, or false if not. 
-	 */
-	public boolean contains(T anEntry) {
-		checkInitialization();
-		//		boolean found = false;
-		//		for(T entry : bag) {
-		//			if(entry.equals(anEntry)) {
-		//				found = true;				
-		//			}
-		//		}
-		//		return found;
-		return (getIndexOf(anEntry) != -1);
-	}
+   /**
+    * Counts the number of times a given entry appears in this bag.
+    * 
+    * @param anEntry The entry to be counted.
+    * @return The number of times anEntry appears in this ba.
+    */
+   public int getFrequencyOf(T anEntry) {
+      checkInitialization();
+      int counter = 0;
 
-	/** Retrieves all entries that are in this bag.
-	 * @return  A newly allocated array of all the entries in the bag.
-	 *          Note: If the bag is empty, the returned array is empty. 
-	 */
-	public Object[] toArray() {
-		checkInitialization();
-		//The below line is too dangerous! You give the client a reference to your underlying implementation.
-		//result = bag;
-		@SuppressWarnings("unchecked")
-		T[] result = (T[]) new Object[size];	
-		for(int i=0; i<size; i++) {
-			result[i] = bag[i]; //This is shallow copying (just copying references to bag entries).
-		}
-		return result;
-		//Alternatively, we can use:
-		//return Arrays.copyOf(bag, size);
-	}
+      for (int index = 0; index < numberOfEntries; index++) {
+         if (anEntry.equals(bag[index])) {
+            counter++;
+         } // end if
+      } // end for
 
-	//You don't want to make this method public. It exposes the underlying array implementation.
-	/** A helper method to find the index of an object inside the array bag
-	 * @param anEntry The entry to get its index inside the bag
-	 * @return the integer index of anEntry inside bag, or -1 if anEntry is not found.
-	 * Precondition: checkInitialization() has been called.
-	 */
-	private int getIndexOf(T anEntry) {
-		int index = -1;
-		for(int i=0; i<size; i++) {
-			if(anEntry.equals(bag[i])) { //Safer than bag[i].equals(anEntry).
-				index = i;
-				break;
-			}
-		}
-		return index;		
-	}
-	
-	private void checkInitialization() {
-		if(!initialized) {
-			throw new SecurityException("The ArrayBag object has not been properly initialized.");
-		}
-	}
-	
-	/** Removes and returns an entry at the given index.
-	 * @param index The index of the entry to be removed.
-	 * @return The removed object or null if no such entry exists.
-	 * Precondition: 0 <= index <= size.
-	 * Precondition: checkInitialization() has been called.
-	 */
-	private T removeEntry(int index) {
-		T result = null;
-		if((index >= 0) && (index < size)){
-			result = bag[index];
-			// We can shift the array elements one position up.
-			// To get the for loop correct, you may check its first and last iteration.
-			//For example, i<size causes an ArrayOutOfBoundException because in the last iteration
-			// bag[size] will be indexed.
-			//for(int i=index; i<size-1; i++) {
-			//	bag[i] = bag[i+1];
-			//}
-			
-			//Or, more efficiently, we can place the last entry at index.
-			bag[index] = bag[size-1];
-            bag[size - 1] = null;
-			size--;
-		}
-		return result;
-	}
+      return counter;
+   } // end getFrequencyOf
 
-}
+   /**
+    * Tests whether this bag contains a given entry.
+    * 
+    * @param anEntry The entry to locate.
+    * @return True if this bag contains anEntry, or false otherwise.
+    */
+   public boolean contains(T anEntry) {
+      checkInitialization();
+      return getIndexOf(anEntry) > -1; // or >= 0
+   } // end contains
+
+   /** Removes all entries from this bag. */
+   public void clear() {
+      while (!isEmpty())
+         remove();
+   } // end clear
+
+   /**
+    * Removes one unspecified entry from this bag, if possible.
+    * 
+    * @return Either the removed entry, if the removal
+    *         was successful, or null.
+    */
+   public T remove() {
+      checkInitialization();
+      T result = removeEntry(numberOfEntries - 1);
+      return result;
+   } // end remove
+
+   /**
+    * Removes one occurrence of a given entry from this bag.
+    * 
+    * @param anEntry The entry to be removed.
+    * @return True if the removal was successful, or false if not.
+    */
+   public boolean remove(T anEntry) {
+      checkInitialization();
+      int index = getIndexOf(anEntry);
+      T result = removeEntry(index);
+      return anEntry.equals(result);
+   } // end remove
+
+   // Returns true if the array bag is full, or false if not.
+   private boolean isArrayFull() {
+      return numberOfEntries >= bag.length;
+   } // end isArrayFull
+
+   // Locates a given entry within the array bag.
+   // Returns the index of the entry, if located,
+   // or -1 otherwise.
+   // Precondition: checkInitialization has been called.
+   private int getIndexOf(T anEntry) {
+      int where = -1;
+      boolean found = false;
+      int index = 0;
+
+      while (!found && (index < numberOfEntries)) {
+         if (anEntry.equals(bag[index])) {
+            found = true;
+            where = index;
+         } // end if
+         index++;
+      } // end while
+
+      // Assertion: If where > -1, anEntry is in the array bag, and it
+      // equals bag[where]; otherwise, anEntry is not in the array.
+
+      return where;
+   } // end getIndexOf
+
+   // Removes and returns the entry at a given index within the array.
+   // If no such entry exists, returns null.
+   // Precondition: 0 <= givenIndex < numberOfEntries.
+   // Precondition: checkInitialization has been called.
+   private T removeEntry(int givenIndex) {
+      T result = null;
+
+      if (!isEmpty() && (givenIndex >= 0)) {
+         result = bag[givenIndex]; // Entry to remove
+         int lastIndex = numberOfEntries - 1;
+         bag[givenIndex] = bag[lastIndex]; // Replace entry to remove with last entry
+         bag[lastIndex] = null; // Remove reference to last entry
+         numberOfEntries--;
+      } // end if
+
+      return result;
+   } // end removeEntry
+
+   // Throws an exception if this object is not initialized.
+   private void checkInitialization() {
+      if (!initialized)
+         throw new SecurityException("ArrayBag object is not initialized properly.");
+   } // end checkInitialization
+} // end ArrayBag
