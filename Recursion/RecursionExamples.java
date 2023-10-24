@@ -9,7 +9,11 @@ public class RecursionExamples {
         System.out.print("Chain in reverse order: ");
         displayChainBackwards(firstNode);
         System.out.println();
-        int x = 2, y = -1;
+        firstNode = reverse(firstNode);
+        System.out.print("Chain in reverse order: ");
+        displayChainBackwards(firstNode);
+        System.out.println();
+        int x = 2, y = 20;
         System.out.print(x + "^" + y + " = ");
         System.out.println(power(x, y));
 
@@ -20,6 +24,21 @@ public class RecursionExamples {
             displayChainBackwards(nodeOne.next);
             System.out.print(nodeOne.data + " ");
         }
+    }
+
+    private static Node reverse(Node first){
+        Node result = null;
+        if(first == null || first.next == null){
+            result = first;
+        } else {
+            Node second = first.next;
+            Node newFirst = reverse(second);
+            second.next = first;
+            first.next = null;
+            result = newFirst;
+        }
+
+        return result;
     }
 
     private static class Node{
