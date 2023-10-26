@@ -7,7 +7,6 @@ final public class Backtracking {
 
   public static void main(String[] args){
     //findPIN();
-    eightQueens();
     //sudoku();
   }
 
@@ -40,73 +39,14 @@ final public class Backtracking {
     return result;
   }
 
-  public static void eightQueens(){
-    Character[][] board = new Character[BOARD_SIZE][BOARD_SIZE];
-    for(int i=0; i<BOARD_SIZE; i++){
-      for(int j=0; j<BOARD_SIZE; j++){
-        board[i][j] = '-';
-      }
-    }
-    solve8Queens(0, board);
-  }
-
-  private static void solve8Queens(int queenNo, Character[][] board){
-    if(queenNo == BOARD_SIZE){
-      printBoard(board);
-      System.out.println("----------------------");
-
-      // System.exit(0); //one solution
-      return; //all solutions
-    }
-    for(int i=0; i < BOARD_SIZE; i++){
-      if(isValidPlace(queenNo, i, board)){
-        board[i][queenNo] = 'Q';
-        solve8Queens(queenNo+1, board);
-        board[i][queenNo] = '-';
-      }
-    }
-  }
-
+ 
   private static <T> void printBoard(T[][] board){
     for(int i=0; i<board.length; i++){
       System.out.println(Arrays.toString(board[i]));
     }
   }
 
-  private static boolean isValidPlace(int queenNo, int row, Character[][] board){
-    for(int i=0; i<queenNo; i++){
-      if(board[row][i] == 'Q'){
-        return false;
-      }
-    }
-
-    for(int i=0; i<row; i++){
-      if(board[i][queenNo] == 'Q'){
-        return false;
-      }
-    }
-
-    int i = row;
-    int j = queenNo;
-    while(i >0 && j > 0){
-      i--;
-      j--;
-      if(board[i][j] == 'Q'){
-        return false;
-      }
-    }
-
-    i = row;
-    j = queenNo;
-    while(i < BOARD_SIZE-1 && j > 0){
-      i++;
-      j--;
-      if(board[i][j] == 'Q'){
-        return false;
-      }
-    }
-    return true;
-  }
+  
 
   public static void sudoku(){
     Integer[][] board = new Integer[SUDOKU_SIZE][SUDOKU_SIZE];
