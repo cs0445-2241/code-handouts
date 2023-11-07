@@ -1,0 +1,40 @@
+001 345  067 981 413 087 012 034 057
+
+bucket 0:
+bucket 1: 001 981
+bucket 2: 012
+bucket 3: 413
+bucket 4: 034
+bucket 5: 345
+bucket 6:
+bucket 7: 067 087 057
+bucket 8:
+bucket 9:
+
+001 981 012 413 034 345 067 087 057
+
+bucket 0: 001
+bucket 1: 012 413
+bucket 2:
+bucket 3: 034
+bucket 4: 345
+bucket 5: 057
+bucket 6: 067
+bucket 7:
+bucket 8: 981 087
+bucket 9:
+
+001 012 413 034 345 057 067 981 087
+
+bucket 0: 001 012 034 057 067 087
+bucket 1: 
+bucket 2:
+bucket 3: 345
+bucket 4: 413
+bucket 5: 
+bucket 6: 
+bucket 7:
+bucket 8: 
+bucket 9: 981
+
+001 012 034 057 067 087 345 413 981
