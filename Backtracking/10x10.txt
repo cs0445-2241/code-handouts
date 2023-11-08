@@ -1,0 +1,12 @@
+10
+t r e a e l p o e p
+r h o n g w a i e r
+a e i e v o y v e j
+e r i n h t i h u n
+l p e e k l t m e i
+v d d o s i p w e c
+u s n h h u n a w e
+l l i i e e o g o b
+y u a g k h r h n n
+p k r h m u r s k y
+SOURCE: https://github.com/the-jake-z/WordSearch/blob/master/puzzle.txt
