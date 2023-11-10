@@ -1,6 +1,11 @@
 public class RecursionExamples {
 
     public static void main(String[] args){
+
+        solveTowers(4, 0, 2, 1);
+        System.out.println("------------------");
+        iterativeSolveTowers(4, 0, 2, 1);
+        System.out.println("------------------");
         //Build a 3-node chain
         Node firstNode = 
             new Node(10);
@@ -41,7 +46,7 @@ public class RecursionExamples {
         return result;
     }
 
-    private static class Node{
+    private static class Node {
         int data;
         Node next;
 
@@ -87,6 +92,26 @@ public class RecursionExamples {
             }
         }
         return result;
+    }
+
+    public static void solveTowers(int nDisks, int start, int finish, int temp){
+        if(nDisks > 0){
+            solveTowers(nDisks-1, start, temp, finish);
+            System.out.println("Move a disk from " + start + " to " + finish);
+            solveTowers(nDisks-1, temp, finish, start);
+        }
+    }
+
+    public static void iterativeSolveTowers(int nDisks, int start, int finish, int temp){
+        while(nDisks > 0){
+            solveTowers(nDisks-1, start, temp, finish);
+            System.out.println("Move a disk from " + start + " to " + finish);
+            //solveTowers(nDisks-1, temp, finish, start);
+            nDisks = nDisks - 1;
+            int swap = start;
+            start = temp;
+            temp = swap;
+        }
     }
 
 }
