@@ -198,8 +198,7 @@ public class LList<T> implements ListInterface<T>
 		return currentNode;
 	} // end getNodeAt
 
-	private class Node
-	{
+	private class Node {
       private T    data; // Entry in list
       private Node next; // Link to next node
 
