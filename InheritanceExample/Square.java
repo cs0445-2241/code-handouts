@@ -76,8 +76,7 @@ public class Square {
     boolean result = false;
     if(other instanceof Square){
       Square s = (Square) other;
-      result = sideLength.equals(s.sideLength) && area.equals(s.area) 
-               && perimeter.equals(s.perimeter);
+      result = sideLength.equals(s.sideLength);
       //What happens if we use sideLength == s.sideLength?
     }
     return result;
