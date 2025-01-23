@@ -74,9 +74,14 @@ public class Square {
 
   public boolean equals(Object other){
     boolean result = false;
+
+    //This type casting is not safe because other may
+    //not be type-compatible with Square (i.e., Square
+    //or a drived type)
+    // Square s = (Square) other;
+
+
     if(other instanceof Square){
-      Square s = (Square) other;
-      result = sideLength.equals(s.sideLength);
       //What happens if we use sideLength == s.sideLength?
     }
     return result;

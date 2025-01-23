@@ -5,6 +5,9 @@ public class Main {
 
     //OK because ColoredSquare is a Square
     Square aSquare = new ColoredSquare(15, "Green");
+
+    //This should return false, not ClassCastException    
+    //aSquare.equals(new String());
     
     //ILLEGAL because Square is not ColoredSquare
     //ColoredSquare aColoredSquare = new Square(10);

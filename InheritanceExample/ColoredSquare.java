@@ -9,6 +9,7 @@ public class ColoredSquare extends Square {
 
   public ColoredSquare(Integer sideLength){
     super(sideLength);
+    this.color = DEFAULT_COLOR;
     //What will happen if we call 
     //this(sideLength) instead?
   
@@ -30,9 +31,10 @@ public class ColoredSquare extends Square {
 
   public boolean equals(Object other){
     boolean result = false;
-    if(other instanceof ColoredSquare){
-      ColoredSquare cs = (ColoredSquare) other;
+    ColoredSquare cs = (ColoredSquare) other;
       result = super.equals(other) && this.color.equals(cs.color);
+    if(other instanceof ColoredSquare){
+      
       //What happens if we use this.color == cs.color?
     }
     return result;
