@@ -1,5 +1,4 @@
-public class DSquare 
-      implements Measurable {
+public class DSquare implements Measurable, Comparable<Measurable> {
 
   private Double sideLength;
 

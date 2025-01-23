@@ -3,6 +3,10 @@ public class Main {
     Square<Double> aSquare;
     //Double is type argument
     //Double is an actual type parameter
+    Square<Integer> anothSquare;
+    //The below declaration causes a compilation error
+    //becasue String doesn't extend Number
+    //Square<String> aThirdSquare;
 
     ColoredSquare<Double> aColoredSquare;
 

@@ -1,4 +1,4 @@
-public class ISquare implements Measurable {
+public class ISquare implements Measurable, Comparable<Measurable> {
 
   private Integer sideLength;
 
@@ -22,6 +22,7 @@ public class ISquare implements Measurable {
   }
 
   //Overriding
+  @override
   public String toString(){
     return "A square of area: " + getArea() +
            " and perimeter: " + getPerimeter();
