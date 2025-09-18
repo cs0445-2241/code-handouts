@@ -38,7 +38,7 @@ public class Main {
   }
 
 public static void display(Square s){
-  System.out.println(s.toString()); //which toString is called?
+  System.out.println(s); //which toString is called?
 }
 
 }

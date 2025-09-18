@@ -31,10 +31,9 @@ public class ColoredSquare extends Square {
 
   public boolean equals(Object other){
     boolean result = false;
-    ColoredSquare cs = (ColoredSquare) other;
-      result = super.equals(other) && this.color.equals(cs.color);
     if(other instanceof ColoredSquare){
-      
+      ColoredSquare cs = (ColoredSquare) other;
+      result = super.equals(other) && this.color.equals(cs.color);
       //What happens if we use this.color == cs.color?
     }
     return result;

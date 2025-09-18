@@ -1,16 +1,17 @@
 public class Square {
 
-  private final Integer DEFAULT_LENGTH = 10; //this is a constant
+  static private final Integer DEFAULT_LENGTH = 10; //this is a constant
   private Integer sideLength; //inches
   private Integer area; //square inches
   private Integer perimeter; //inches
 
   //default constructor
   public Square(){
-    this.sideLength = DEFAULT_LENGTH;
-    //this is an eager approach; keep area and perimeter correct all the time
-    computeArea();
-    computePerimeter();
+    // this.sideLength = DEFAULT_LENGTH;
+    // //this is an eager approach; keep area and perimeter correct all the time
+    // computeArea();
+    // computePerimeter();
+    this(DEFAULT_LENGTH);
   }
 
   //parameterized constructor
@@ -72,6 +73,7 @@ public class Square {
            getPerimeter() + " inches.";
   }
 
+  @Override
   public boolean equals(Object other){
     boolean result = false;
 
@@ -83,6 +85,9 @@ public class Square {
 
     if(other instanceof Square){
       //What happens if we use sideLength == s.sideLength?
+      Square otherSquare = (Square) other;
+      result = otherSquare.sideLength.
+        equals(this.sideLength);
     }
     return result;
   }
